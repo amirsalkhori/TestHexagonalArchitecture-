@@ -1,5 +1,7 @@
 package domain
 
+import errs "goHexagonal/errs"
+
 type Customer struct {
 	Id string `json:"id"`
 	Name string `json:"name"`
@@ -11,5 +13,5 @@ type Customer struct {
 
 type CustomerRepository interface{
 	FindAll() ([]Customer, error)
-	FindById(id string) (*Customer, error)
+	FindById(id string) (*Customer, *errs.AppError)
 }

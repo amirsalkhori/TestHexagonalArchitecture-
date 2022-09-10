@@ -2,8 +2,10 @@ package domain
 
 import (
 	"database/sql"
+	errs "goHexagonal/errs"
 	"log"
 	"time"
+
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -32,14 +34,19 @@ func(c CustomerRepositoryDb) FindAll() ([]Customer, error){
 	return customers, nil
 }
 
-func (c CustomerRepositoryDb) FindById(id string) (*Customer, error){
+func (c CustomerRepositoryDb) FindById(id string) (*Customer, *errs.AppError){
 	findById := "SELECT * FROM customers WHERE customer_id = ?"
 	row := c.client.QueryRow(findById, id)
 	var customer Customer
 	err := row.Scan(&customer.Id, &customer.Name, &customer.City, &customer.DateOfBirth, &customer.ZipCode, &customer.Status)
 	if err != nil {
-		log.Println("Error while query customer table" + err.Error())
-		return nil, err
+		if err == sql.ErrNoRows {
+			log.Println("Error while query customer table" + err.Error())
+			return nil, errs.NewNotFoundError("Customer not found")
+		}else{
+			log.Println("Error while query customer table" + err.Error())
+			return nil, errs.NewUnexpectedError("Unexpected database error")
+		}
 	}
 
 	return &customer, nil

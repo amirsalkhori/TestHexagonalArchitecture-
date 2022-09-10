@@ -1,10 +1,13 @@
 package service
 
-import "goHexagonal/domain"
+import (
+	"goHexagonal/domain"
+	errs "goHexagonal/errs"
+)
 
 type CustomerService interface {
 	GetAllCustomers() ([]domain.Customer, error)
-	GetById(id string) (*domain.Customer, error)
+	GetById(id string) (*domain.Customer, *errs.AppError)
 }
 
 type DefaultCustomerService struct {
@@ -15,7 +18,7 @@ func(d DefaultCustomerService) GetAllCustomers() ([]domain.Customer, error) {
 	return d.repo.FindAll()
 }
 
-func (d DefaultCustomerService) GetById(id string) (*domain.Customer, error) {
+func (d DefaultCustomerService) GetById(id string) (*domain.Customer, *errs.AppError) {
 	return d.repo.FindById(id)
 }
 
