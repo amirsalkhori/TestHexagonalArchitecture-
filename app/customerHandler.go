@@ -21,7 +21,7 @@ func(customerHandler *CustomerHandler) getAllCustomers(w http.ResponseWriter, r 
 	}else if status == "inactive"{
 		status = "0"
 	}else{
-		status = ""
+		status = "نثق"
 	}
 	customers, err := customerHandler.service.GetAllCustomers(status)
 	if err != nil {

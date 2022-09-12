@@ -3,14 +3,16 @@ package app
 import (
 	"fmt"
 	"goHexagonal/domain"
+	"goHexagonal/logger"
 	"goHexagonal/service"
 	"log"
 	"net/http"
+
 	"github.com/gorilla/mux"
 )
 
 func Start() {
-	fmt.Println("This is my log message")
+	logger.Info("Starting app")
 	// mux := http.NewServeMux()
 	customerHandler := CustomerHandler{service.NewCustomerService(domain.NewCustomerRepositoryDb())}
 	router := mux.NewRouter()

@@ -3,7 +3,7 @@ package domain
 import (
 	"database/sql"
 	errs "goHexagonal/errs"
-	"log"
+	"goHexagonal/logger"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -25,15 +25,15 @@ func(c CustomerRepositoryDb) FindAll(status string) ([]Customer, *errs.AppError)
 		rows, err = c.client.Query(findAllSql, status)
 	}
 	if err != nil{
-		log.Println("Error while query customer " + err.Error())
-		return nil, errs.NewUnexpectedError("Unexpected database error")
+		logger.Error("Error while query customer " + err.Error())
+		return nil, errs.NewNotFoundError("Unexpected database error")
 	}
 	customers := make([]Customer, 0)
 	for rows.Next(){
 		var c Customer
 		err := rows.Scan(&c.Id, &c.Name, &c.City, &c.ZipCode, &c.DateOfBirth, &c.Status)
 		if err != nil {
-			log.Println("Error while scanning customers table " + err.Error())
+			logger.Error("Error while scanning customers table " + err.Error())
 			return nil, errs.NewUnexpectedError("Unexpected database error")
 		} 
 		customers = append(customers, c)
@@ -49,10 +49,10 @@ func (c CustomerRepositoryDb) FindById(id string) (*Customer, *errs.AppError){
 	err := row.Scan(&customer.Id, &customer.Name, &customer.City, &customer.DateOfBirth, &customer.ZipCode, &customer.Status)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			log.Println("Error while query customer table" + err.Error())
+			logger.Error("Error while query customer table" + err.Error())
 			return nil, errs.NewNotFoundError("Customer not found")
 		}else{
-			log.Println("Error while query customer table" + err.Error())
+			logger.Error("Error while query customer table" + err.Error())
 			return nil, errs.NewUnexpectedError("Unexpected database error")
 		}
 	}
