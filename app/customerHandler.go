@@ -15,7 +15,15 @@ type CustomerHandler struct {
 
 
 func(customerHandler *CustomerHandler) getAllCustomers(w http.ResponseWriter, r *http.Request){
-	customers, err := customerHandler.service.GetAllCustomers()
+	status := r.URL.Query().Get("status")
+	if status == "active"{
+		status = "1"
+	}else if status == "inactive"{
+		status = "0"
+	}else{
+		status = ""
+	}
+	customers, err := customerHandler.service.GetAllCustomers(status)
 	if err != nil {
 		writeResponse(w, r, err.Code, err.AsMessage())
 	}
