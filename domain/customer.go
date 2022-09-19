@@ -1,16 +1,41 @@
 package domain
 
-import errs "goHexagonal/errs"
+import (
+	"goHexagonal/dto"
+	errs "goHexagonal/errs"
+)
 
 type Customer struct {
-	Id string `json:"id" db:"customer_id"`
-	Name string `json:"name" db:"name"`
-	City string `json:"city" db:"city"`
-	ZipCode string `json:"zip" db:"zip_code"`
-	DateOfBirth string `json:"dateOfBirth" db:"date_of_birth"`
-	Status string `json:"status" db:"status"`
+	Id string `db:"customer_id"`
+	Name string `db:"name"`
+	City string `db:"city"`
+	ZipCode string `db:"zip_code"`
+	DateOfBirth string `db:"date_of_birth"`
+	Status string `db:"status"`
 }
 
+func (c Customer) statusAsTect() string{
+	statusAsText := "active"
+	if c.Status == "inactive" {
+		statusAsText = "inactive"
+	}
+
+	return statusAsText 
+}
+func(c Customer) ToDto() dto.CustomerResponse{
+	
+	response := dto.CustomerResponse{
+		Id: 			c.Id,
+		Name: 			c.Name,
+		City: 			c.City,
+		ZipCode: 		c.ZipCode,
+		DateOfBirth: 	c.DateOfBirth,
+		Status: 		c.statusAsTect(),
+	}
+
+	return response
+}
+ 
 type CustomerRepository interface{
 	FindAll(status string) ([]Customer, *errs.AppError)
 	FindById(id string) (*Customer, *errs.AppError)
