@@ -14,7 +14,7 @@ type Customer struct {
 	Status string `db:"status"`
 }
 
-func (c Customer) statusAsTect() string{
+func (c Customer) statusAsText() string{
 	statusAsText := "active"
 	if c.Status == "inactive" {
 		statusAsText = "inactive"
@@ -30,7 +30,7 @@ func(c Customer) ToDto() dto.CustomerResponse{
 		City: 			c.City,
 		ZipCode: 		c.ZipCode,
 		DateOfBirth: 	c.DateOfBirth,
-		Status: 		c.statusAsTect(),
+		Status: 		c.statusAsText(),
 	}
 
 	return response
