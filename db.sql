@@ -25,6 +25,7 @@ CREATE TABLE `accounts` (
     `account_id` int(11) NOT NULL AUTO_INCREMENT,
     `customer_id` int(11) NOT NULL ,
     `opening_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `amount` float NOT NULL,
     `account_type` varchar(10) NOT NULL,
     `pin` varchar(10) NOT NULL,
     `status` tinyint(1) NOT NULL DEFAULT '1',

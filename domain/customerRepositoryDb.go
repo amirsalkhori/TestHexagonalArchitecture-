@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	errs "goHexagonal/errs"
 	"goHexagonal/logger"
-	"time"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 )
@@ -64,23 +63,6 @@ func (c CustomerRepositoryDb) FindById(id string) (*Customer, *errs.AppError){
 	return &customer, nil
 }
 
-func NewCustomerRepositoryDb() CustomerRepositoryDb{
-	// db_user := os.Getenv("DB_USER")
-	// db_pass := os.Getenv("DB_PASSWD")
-	// db_address := os.Getenv("DB_ADDR")
-	// db_port := os.Getenv("DB_PORT")
-	// db_name := os.Getenv("DB_NAME")
-
-	// dbConfig := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", db_user, db_pass,db_address, db_port, db_name)
-	// client, err := sqlx.Open("mysql", dbConfig)
-
-	client, err := sqlx.Open("mysql", "rooti:changeMe@tcp(localhost:3306)/banking")
-	if err != nil {
-		panic(err)
-	}
-	// See "Important settings" section.
-	client.SetConnMaxLifetime(time.Minute * 3)
-	client.SetMaxOpenConns(10)
-	client.SetMaxIdleConns(10)		
-	return CustomerRepositoryDb{client}
+func NewCustomerRepositoryDb(dbClient *sqlx.DB) CustomerRepositoryDb{
+	return CustomerRepositoryDb{dbClient}
 }

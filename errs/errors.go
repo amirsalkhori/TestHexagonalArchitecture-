@@ -18,3 +18,10 @@ func NewUnexpectedError(message string) *AppError {
 func(err AppError) AsMessage() *AppError{
 	return &AppError{Message: err.Message}
 }
+
+func NewValidationError(message string) *AppError {
+	return &AppError{
+		Message: message,
+		Code: http.StatusUnprocessableEntity,
+	}
+}
